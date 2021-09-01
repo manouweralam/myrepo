@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="6ea122d3-eded-4a6b-97e8-b0c650fe92b1" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Mannu@786" database="world" />
+	</db:config>
+	<sub-flow name="city-poc2Sub_Flow" doc:id="5998bd1b-8c3a-46d4-9bd4-1f432d89544a" >
+		<db:select doc:id="82c25097-a44e-45e0-8e32-5dcabc9723bc" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from city ;]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="932c4ab1-97e9-4e24-8195-246abf561af1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map {
+	id: $.ID,
+	population:$.Population,
+	countrycode:$.CountryCode
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>
